@@ -4,14 +4,14 @@
 using namespace std;
 bool g_bRun = true;
 
-//¿Í»§¶ËÊıÁ¿
+//å®¢æˆ·ç«¯æ•°é‡
 const int cCount = 200;
-//·¢ËÍÏß³ÌÊıÁ¿
+//å‘é€çº¿ç¨‹æ•°é‡
 const int tCount = 4;
-//¿Í»§¶ËÊı×é
+//å®¢æˆ·ç«¯æ•°ç»„
 EasyTcpClient* client[cCount];
 
-//½«ÊäÈëÃüÁî·ÖÀë³öÀ´
+//å°†è¾“å…¥å‘½ä»¤åˆ†ç¦»å‡ºæ¥
 void cmdThread() {
 	while (true)
 	{
@@ -20,16 +20,16 @@ void cmdThread() {
 		if (0 == strcmp(cmdBuf, "exit"))
 		{
 			g_bRun = false;
-			printf("ÍË³öcmdThreadÏß³Ì\n");
+			printf("é€€å‡ºcmdThreadçº¿ç¨‹\n");
 			break;
 		}
 		else
 		{
-			printf("²»Ö§³ÖµÄÃüÁî\n");
+			printf("ä¸æ”¯æŒçš„å‘½ä»¤\n");
 		}
 	}
 }
-void sendThread(int id) //4¸öÏß³Ì 1 - 4
+void sendThread(int id) //4ä¸ªçº¿ç¨‹ 1 - 4
 {
 	//ID 1-4
 	int c = cCount / tCount;
@@ -62,14 +62,14 @@ void sendThread(int id) //4¸öÏß³Ì 1 - 4
 	}
 }
 
-//Ò»¸ö¿Í»§¶ËÍ¬Ê±Á´½Ó¶à¸ö·şÎñÆ÷ ÒÔÁíÍâÒ»ÖÖ·½Ê½Ìæ»»¶àÏß³Ì·½Ê½
-//¿Í»§¶Ë×Ô¼ºÏò·şÎñÆ÷·¢Êı¾İ
+//ä¸€ä¸ªå®¢æˆ·ç«¯åŒæ—¶é“¾æ¥å¤šä¸ªæœåŠ¡å™¨ ä»¥å¦å¤–ä¸€ç§æ–¹å¼æ›¿æ¢å¤šçº¿ç¨‹æ–¹å¼
+//å®¢æˆ·ç«¯è‡ªå·±å‘æœåŠ¡å™¨å‘æ•°æ®
 int main()
 {
 	thread t1(cmdThread);
 	t1.detach();
 
-	//Æô¶¯·¢ËÍÏß³Ì
+	//å¯åŠ¨å‘é€çº¿ç¨‹
 	for (int n = 0; n < tCount; n++)
 	{
 		thread t1(sendThread, n + 1);
@@ -79,6 +79,6 @@ int main()
 	{
 		sleep(1);
 	}
-	printf("ÒÑÍË³ö.\n");
+	printf("å·²é€€å‡º.\n");
 	return 0;
 }

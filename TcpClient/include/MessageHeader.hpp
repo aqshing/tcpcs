@@ -16,11 +16,11 @@ struct DataHeader
 		dataLength = sizeof(DataHeader);
 		cmd = CMD_ERROR;
 	}
-	short dataLength;//数据长度
-	short cmd;//命令
+	short dataLength;//鏁版嵁闀垮害
+	short cmd;//鍛戒护
 };
 //DataPackage
-//包体
+//鍖呬綋
 struct Login : public DataHeader
 {
 	//DataHeader header;
@@ -63,7 +63,7 @@ struct LoginOutResult : public DataHeader
 	}
 	int result;
 };
-//新客户端加入
+//鏂板鎴风鍔犲叆
 struct NewUserJoin : public DataHeader
 {
 	NewUserJoin()

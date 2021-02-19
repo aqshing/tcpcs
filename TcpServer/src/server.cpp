@@ -4,7 +4,7 @@
 using namespace std;
 
 bool g_bRun = true;
-//½«ÊäÈëÃüÁî·ÖÀë³öÀ´
+//å°†è¾“å…¥å‘½ä»¤åˆ†ç¦»å‡ºæ¥
 void cmdThread1() {
 	while (true)
 	{
@@ -13,19 +13,19 @@ void cmdThread1() {
 		if (0 == strcmp(cmdBuf, "exit"))
 		{
 			g_bRun = false;
-			printf("ÍË³öcmdThreadÏß³Ì\n");
+			printf("é€€å‡ºcmdThreadçº¿ç¨‹\n");
 			break;
 		}
 		else
 		{
-			printf("²»Ö§³ÖµÄÃüÁî\n");
+			printf("ä¸æ”¯æŒçš„å‘½ä»¤\n");
 		}
 	}
 }
 
 int main()
 {
-	/*Ìí¼Ó¹¦ÄÜ -> ¼ÓÈëÏß³ÌÊ¹µÃ·şÎñÆ÷¿ÉÒÔÏñ ¿Í»§¶ËÒ»ÑùÍ¨¹ıÊäÈëexitÍË³ö*/
+	/*æ·»åŠ åŠŸèƒ½ -> åŠ å…¥çº¿ç¨‹ä½¿å¾—æœåŠ¡å™¨å¯ä»¥åƒ å®¢æˆ·ç«¯ä¸€æ ·é€šè¿‡è¾“å…¥exité€€å‡º*/
 	EasyTcpServer server;
 	server.Bind(nullptr, 4567);
 	server.Listen(5);
@@ -44,11 +44,11 @@ int main()
 	{
 		server.OnRun();
 		//server1.OnRun();
-		//printf("¿ÕÏĞÊ±¼ä´¦ÀíÆäËûÒµÎñ...\n");
+		//printf("ç©ºé—²æ—¶é—´å¤„ç†å…¶ä»–ä¸šåŠ¡...\n");
 	}
 	server.Close();
 	//server1.Close();
-	printf("ÒÑÍË³ö¡£\n");
+	printf("å·²é€€å‡ºã€‚\n");
 	getchar();
 	return 0;
 }

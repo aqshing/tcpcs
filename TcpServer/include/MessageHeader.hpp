@@ -5,13 +5,13 @@
 
 #include <WinSock2.h>
 #include <windows.h>
-#pragma comment(lib,"ws2_32.lib")	//½â¾ö¿âµ÷ÓÃ  ÎÒÃÇÓÃÍ¨ÓÃµÄ·½·¨ ÒÑ¾­ÔÚÊôĞÔÖĞÌí¼ÓÁË
+#pragma comment(lib,"ws2_32.lib")	//è§£å†³åº“è°ƒç”¨  æˆ‘ä»¬ç”¨é€šç”¨çš„æ–¹æ³• å·²ç»åœ¨å±æ€§ä¸­æ·»åŠ äº†
 #else
-#include <unistd.h>             //unixµÄ±ê×¼¿â
+#include <unistd.h>             //unixçš„æ ‡å‡†åº“
 #include <arpa/inet.h>
 #include <string.h>
 
-//½â¾öSOCKETºê¶¨Òå
+//è§£å†³SOCKETå®å®šä¹‰
 #define SOCKET int
 #define INVALID_SOCKET (SOCKET)(~0)
 #define SOCKET_ERROR (-1)
@@ -20,7 +20,7 @@
 #include <stdio.h>
 #include <thread>
 
-enum CMD        //Ã¶¾ÙµÇÂ¼ºÍµÇ³ö
+enum CMD        //æšä¸¾ç™»å½•å’Œç™»å‡º
 {
 	CMD_LOGIN,
 	CMD_LOGIN_RESULT,
@@ -30,13 +30,13 @@ enum CMD        //Ã¶¾ÙµÇÂ¼ºÍµÇ³ö
 	CMD_ERROR
 };
 
-struct DataHeader       //¶¨ÒåÊı¾İ°üÍ·
+struct DataHeader       //å®šä¹‰æ•°æ®åŒ…å¤´
 {
 	unsigned short dataLength;
 	unsigned short cmd;
 };
 
-struct Login : public DataHeader                //¶¨ÒåÒ»¸ö½á¹¹Ìå·â×°Êı¾İ
+struct Login : public DataHeader                //å®šä¹‰ä¸€ä¸ªç»“æ„ä½“å°è£…æ•°æ®
 {
 	Login()
 	{
@@ -47,7 +47,7 @@ struct Login : public DataHeader                //¶¨ÒåÒ»¸ö½á¹¹Ìå·â×°Êı¾İ
 	char passWord[32];
 };
 
-struct LoginResult : public DataHeader  //·µ»ØµÇÂ¼µÄ½á¹û
+struct LoginResult : public DataHeader  //è¿”å›ç™»å½•çš„ç»“æœ
 {
 	LoginResult()
 	{
@@ -58,7 +58,7 @@ struct LoginResult : public DataHeader  //·µ»ØµÇÂ¼µÄ½á¹û
 	int result;
 };
 
-struct Logout : public DataHeader               //·µ»ØË­ÒªÍË³ö
+struct Logout : public DataHeader               //è¿”å›è°è¦é€€å‡º
 {
 	Logout()
 	{
@@ -67,7 +67,7 @@ struct Logout : public DataHeader               //·µ»ØË­ÒªÍË³ö
 	}
 	char username[32];
 };
-struct LogoutResult : public DataHeader         //·µ»ØµÇ³öµÄ½á¹û
+struct LogoutResult : public DataHeader         //è¿”å›ç™»å‡ºçš„ç»“æœ
 {
 	LogoutResult()
 	{
@@ -77,7 +77,7 @@ struct LogoutResult : public DataHeader         //·µ»ØµÇ³öµÄ½á¹û
 	}
 	int result;
 };
-struct NewUserJoin : public DataHeader          //ĞÂÓÃ»§¼ÓÈë
+struct NewUserJoin : public DataHeader          //æ–°ç”¨æˆ·åŠ å…¥
 {
 	NewUserJoin()
 	{

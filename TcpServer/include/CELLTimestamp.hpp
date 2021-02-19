@@ -1,5 +1,5 @@
-//Ö§³Öc++ 11 ÇÒ¿çÆ½Ì¨
-/*¸ß¾«¶ÈÊ±¼ä¼ÆÊ±Æ÷*/
+//æ”¯æŒc++ 11 ä¸”è·¨å¹³å°
+/*é«˜ç²¾åº¦æ—¶é—´è®¡æ—¶å™¨*/
 #pragma once
 #ifndef _CELLTimestamp_hpp_
 #define _CELLTimestamp_hpp_
@@ -22,23 +22,23 @@ public:
 	{
 		_begin = high_resolution_clock::now();
 	}
-	/*»ñÈ¡µ±Ç°Ãë*/
+	/*è·å–å½“å‰ç§’*/
 	double getElapsedSecond()
 	{
 		return this->getElapsedTimeInMicrosec() * 0.000001;
 	}
-	/*»ñÈ¡µ±Ç°ºÁÃë*/
+	/*è·å–å½“å‰æ¯«ç§’*/
 	double getElapsedTimeInMillSec()
 	{
 		return this->getElapsedTimeInMicrosec() * 0.001;
 	}
-	/*»ñÈ¡µ±Ç°Î¢Ãë*/
+	/*è·å–å½“å‰å¾®ç§’*/
 	long long getElapsedTimeInMicrosec()
 	{
 		return duration_cast<microseconds>(high_resolution_clock::now() - _begin).count();
 	}
 protected:
-	//high_resolution_clock ¸ß¾«¶È¼ÆÊ±Æ÷
+	//high_resolution_clock é«˜ç²¾åº¦è®¡æ—¶å™¨
 	time_point<high_resolution_clock> _begin;
 };
 #endif

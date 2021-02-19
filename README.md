@@ -4,4 +4,5 @@
 
 基于github开源的 CS Code 改的
 
-## Licence MIT
+## Licence
+MIT
