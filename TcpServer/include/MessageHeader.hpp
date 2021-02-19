@@ -5,7 +5,7 @@
 
 #include <WinSock2.h>
 #include <windows.h>
-#pragma comment(lib,"ws2_32.lib")	//解决库调用  我们用通用的方法 已经在属性中添加了
+#pragma comment(lib,"ws2_32.lib")//解决库调用
 #else
 #include <unistd.h>             //unix的标准库
 #include <arpa/inet.h>
