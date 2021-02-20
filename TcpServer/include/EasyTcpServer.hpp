@@ -18,10 +18,10 @@
 #define SOCKET_ERROR             (-1)
 #endif
 
-#include "stdio.h"
+#include <iostream>
 #include <vector>
+#include <cstdio>
 #include "MessageHeader.hpp"
-#include "iostream"
 #include "CELLTimestamp.hpp"
 
 using std::vector;
@@ -42,15 +42,19 @@ public:
 	inline SOCKET Getsd() const {
 		return _sd;
 	}
+
 	inline char* msgBuf(){
 		return _szMsgBuf;
 	}
+
 	inline size_t getLastPos() const {
 		return _lastPos;
 	}
+
 	inline void setLastPos(int pos) {
 		this->_lastPos = pos;
 	}
+
 private:
 	SOCKET _sd;
 	//第二缓冲区 消息缓冲区
@@ -122,9 +126,8 @@ public:
 		return ret;
 	}
 
-	//监听端口号
+	//监听端口
 	int Listen(int n = 5) {
-		//监听端口
 		int ret = listen(sd, n);
 		if (SOCKET_ERROR == ret) {
 			printf("error socket = %d，listen port fail...\n", (int)sd);
@@ -134,28 +137,27 @@ public:
 		return ret;
 	}
 
-	//接收客户端链接
-	int Accept()
-	{
+	//接收客户端连接
+	int Accept() {
 		//accept 等待接受客户端连接
 		sockaddr_in clientAddr = {};
 		int nAddrLen = sizeof(sockaddr_in);
-		SOCKET cSock = INVALID_SOCKET;
+		SOCKET cSd = INVALID_SOCKET;
 		//nAddrLen类型是windows和linux之间不一样的
 #ifdef _WIN32
-		cSock = accept(_sock, (sockaddr*)&clientAddr, &nAddrLen);
+		cSd = accept(sd, (sockaddr*)&clientAddr, &nAddrLen);
 #else
-		cSock = accept(sd, (sockaddr*)&clientAddr, (socklen_t*)&nAddrLen);
+		cSd = accept(sd, (sockaddr*)&clientAddr, (socklen_t*)&nAddrLen);
 #endif
-		if (INVALID_SOCKET == cSock) {
+		if (INVALID_SOCKET == cSd) {
 			printf("socket<%d>错误，接收到无效客户端SOCKET...\n", (int)sd);
 		} else {
 			//NewUserJoin userJoin;
 			//SendDataToAll(&userJoin);
-			_clients.push_back(new ClientSocket(cSock));
+			_clients.push_back(new ClientSocket(cSd));
 			//printf("socket<%d>新客户端<%d>加入: socket = %d IP = %s \n", (int)_sock, _clients.size(), (int)cSock, inet_ntoa(clientAddr.sin_addr));//inet_ntoa转换为可读地址
 		}
-		return cSock;
+		return cSd;
 	}
 
 	//关闭Socket
@@ -164,17 +166,15 @@ public:
 		if (sd != INVALID_SOCKET)
 		{
 #ifdef _WIN32
-			for (int n = (int)_clients.size() - 1; n >= 0; n--)
-			{
-				closesocket(_clients[n]->sockfd());
+			for (int n = (int)_clients.size() - 1; n >= 0; n--) {
+				closesocket(_clients[n]->Getsd());
 				delete _clients[n];
 			}
-			closesocket(_sock);
-			_sock = INVALID_SOCKET;
+			closesocket(sd);
+			sd = INVALID_SOCKET;
 			WSACleanup();
 #else
-			for (int n = (int)_clients.size() - 1; n >= 0; n--)
-			{
+			for (int n = (int)_clients.size() - 1; n >= 0; n--) {
 				close(_clients[n]->Getsd());
 				delete _clients[n];
 			}

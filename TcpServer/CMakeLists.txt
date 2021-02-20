@@ -56,7 +56,7 @@ include_directories(${INC_DIR})
 include_directories(${X11_INLUCDE_DIR})
 ##add lib file path//添加共享库搜索路径
 link_directories(${LINK_DIR})
-Message(${SRC_FILES})
+
 add_executable(server
 ##src start
 				${SRC_FILES}
