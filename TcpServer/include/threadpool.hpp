@@ -29,7 +29,7 @@ public:
     }
 
     ~CTask() {
-        COUT();
+        //TAG();
     }
 
 private:

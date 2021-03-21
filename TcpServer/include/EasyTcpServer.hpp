@@ -22,7 +22,7 @@
 #include <vector>
 #include <cstdio>
 #include "MessageHeader.hpp"
-#include "CELLTimestamp.hpp"
+#include "timer.hpp"
 
 using std::vector;
 
@@ -372,7 +372,7 @@ private:
 	SOCKET sd;
 	std::vector<ClientSocket*> _clients;
 	//创建一个计时器
-	CELLTimestamp _tTime;
+	CTimer _tTime;
 	int _recvCount;
 };
 #endif

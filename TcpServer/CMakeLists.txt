@@ -4,7 +4,7 @@
 
 
 ##cmake最低版本要求
-cmake_minimum_required(VERSION 3.05)
+cmake_minimum_required(VERSION 3.10)
 ##project name//工程名称
 project(tcpserve)
 ##import package//导入包
@@ -56,6 +56,8 @@ include_directories(${INC_DIR})
 include_directories(${X11_INLUCDE_DIR})
 ##add lib file path//添加共享库搜索路径
 link_directories(${LINK_DIR})
+link_libraries(dl)
+##Message(${SRC_FILES})
 
 add_executable(server
 ##src start
@@ -67,3 +69,4 @@ add_executable(server
 ##link target and lib file//把目标文件与库文件进行链接
 target_link_libraries(server ${X11_LIBRARIES})
 target_link_libraries(server ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(server -ldl)
