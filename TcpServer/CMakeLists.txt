@@ -20,6 +20,7 @@ find_package(X11 REQUIRED)
 set(PROJECT_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
 ##head file directory//头文件路径
 set(INC_DIR "${PROJECT_PATH}/include")
+set(SHARE_INC "${PROJECT_PATH}/../share")
 ##src file directory //源文件路径
 set(SRC_DIR "${PROJECT_PATH}/src")
 ##link library directory//链接库路径
@@ -30,7 +31,7 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_PATH}/bin)
 ##aux_source_directory(指定目录     后面的变量)
 ##aux_source_directory(${SRC_DIR} SRC_FILES)
 ##file GLOB:把指定目录下的*.cpp *.h文件添加到变量中
-file(GLOB SRC_FILES "${SRC_DIR}/*.cpp" "${SRC_DIR}/*.h" "*${SRC_DIR}/.hpp")
+file(GLOB SRC_FILES "${SRC_DIR}/*.cpp" "${SRC_DIR}/*.c")
 ##宏定义
 ##set(PICTURE_PATH "${PROJECT_PATH}/bin/girl.jpg")
 
@@ -46,18 +47,22 @@ configure_file(
 ##set(CMAKE_C_COMPILER "/usr/local/bin/gcc")
 ##set(CMAKE_CXX_COMPILER "/usr/local/bin/g++")
 ##set compiler flag//编译器编译选项设置
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99 -Wall -O2")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -O2")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 ##设置C/C++调试选项
 set(CMAKE_C_FLAGS_DEBUG "-g -Wall -O0 -D _DBG")
 set(CMAKE_CXX_FLAGS_DEBUG "-g -Wall -O0 -D _DBG")
+##设置C/C++发布选项
+set(CMAKE_C_FLAGS_RELEASE "-Wall -O2")
+set(CMAKE_CXX_FLAGS_RELEASE "-Wall -O2")
 ##add head file path//添加头文件搜索路径
 include_directories(${INC_DIR})
-include_directories(${X11_INLUCDE_DIR})
+include_directories(${SHARE_INC})
+##include_directories(${X11_INLUCDE_DIR})
 ##add lib file path//添加共享库搜索路径
 link_directories(${LINK_DIR})
 link_libraries(dl)
-##Message(${SRC_FILES})
+#Message(${SRC_FILES})
 
 add_executable(server
 ##src start

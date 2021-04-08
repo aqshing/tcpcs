@@ -29,19 +29,20 @@ public:
 
 	~CSQLITE3() {
 		if (m_db) {
+			//TAG();
 			sqlite3_close(m_db);
 			m_db = nullptr;
 		}
 	}
 
-	void RUNSQL(const char* sql, sqlite3_callback xCallback, void* pArg) {
+	void RUNSQL(const char* sql, sqlite3_callback xCallback = nullptr, void* pArg = nullptr) {
 		char* pzErrMsg = nullptr;
 
 		auto ret = sqlite3_exec(m_db, sql, xCallback, pArg, &pzErrMsg);
 		if( ret != SQLITE_OK ){
 			COUT("SQL error: %s\n", pzErrMsg);
-			sqlite3_free(pzErrMsg);
 		}
+		sqlite3_free(pzErrMsg);
 	}
 
 	void GETTABLE(const char* sql) {
@@ -57,7 +58,7 @@ public:
 		printf("%s = %s \n", result[0], result[col]);
 		for (ssize_t i = 0; i < row; i++) {
 			for (ssize_t j = 0; j <= col; j++) {
-			//	printf("%s = %s ", result[j], result[index++]);
+				printf("%s = %s ", result[j], result[index++]);
 			}
 			printf("\n");
 		}

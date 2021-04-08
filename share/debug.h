@@ -46,4 +46,19 @@
 #define COUT(...)
 #endif
 
+///@brief 断言cond是否为空指针或者等于0或者为false
+///@param cond 需要断言的变量
+///@param out 要输出的附加信息
+#ifdef _DEBUGGING_
+#define ASSERT_NIL(cond, out) do{	\
+	if (!cond) {				    \
+		fprintf(stderr,             \
+        "assert failed:%s line:%u cond:null\n%s\n" \
+        , __FILE__, __LINE__, out);	\
+	}							    \
+}while(0)
+#else
+#define ASSERT_NIL(cond, out)
+#endif
+
 //#endif

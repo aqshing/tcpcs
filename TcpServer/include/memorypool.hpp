@@ -2,8 +2,18 @@
 #define _MEMORYPOOL_HPP_
 
 #include <cstdlib>
+#include <cassert>
 #include <mutex>
 #include "debug.h"
+
+///@brief: 是否允许内存池拦截new char[0]或malloc(0)等操作
+#ifndef NEWZERO
+#define NEWZERO 1
+#endif
+///@brief: 是否开启内存池调试模式[debug memory new]
+#ifndef DMEMNEW
+#define DMEMNEW 0
+#endif
 
 //内存块 最小单元
 struct Pair
@@ -57,7 +67,7 @@ private:
 	///@breif:初始化内存池
 	///@param size:内存块的大小
 	///@param blockNum:有多少个内存块
-	CMemoryPool(size_t size, size_t blockNum) noexcept
+	explicit CMemoryPool(size_t size, size_t blockNum) noexcept
     :_sizeOfBlock(size), _numOfBlock(blockNum){
 		COUT("mem pool size:%ld, blockNum:%ld\n", size, blockNum);
 		if (_sizeOfBlock == 0) {
@@ -70,6 +80,8 @@ private:
         size_t realSize = _sizeOfBlock + sizeof(MemoryBlock);
 		//向系统申请池内存
 		_poolBuf = (char*)malloc(realSize * _numOfBlock);
+		//断言malloc出来的_poolBuf == null
+		assert(_poolBuf);
 		_pHeader = (MemoryBlock*)_poolBuf;
 		//遍历内存块初始化MemoryBlock信息
 		MemoryBlock* pTem = _pHeader;
@@ -87,7 +99,7 @@ private:
 
 public:
 	//委托构造
-	CMemoryPool(Pair pair)
+	explicit CMemoryPool(Pair pair)
 	:CMemoryPool(pair.size, pair.blockNum){}
 
 	~CMemoryPool() {
@@ -98,14 +110,19 @@ public:
 	}
 
 	//申请内存
-	void* allocMemory(size_t size) {
+	void* allocMemory(size_t size) noexcept {
 		MemoryBlock* pReturn = nullptr;
 		//加锁保护共享数据
 		_mutex.lock();
 		if (nullptr == _pHeader) {
+			// static size_t count = 0;
+			// ++count;
+			// COUT("malloc:%ld\n", count);
 			_mutex.unlock();
             //此时内存池中的内存已经用完了,需要通过malloc申请新的内存
 			pReturn = (MemoryBlock*)malloc(size + sizeof(MemoryBlock));
+			//断言malloc出来的pReturn == null
+			assert(pReturn);
 			pReturn->bPool = false;
 			pReturn->nRefCount = 1;
 			pReturn->pool = this;
@@ -119,12 +136,14 @@ public:
             //将分配出去的mBlock指向内存池方便使用完后再放回内存池
             pReturn->pool = this;
 		}
-		//COUT("mpool new:%u inMpool:%u\n", size, pReturn->bPool);
+#if DMEMNEW
+		COUT("mpool new:%lu inMpool:%u\n", size, pReturn->bPool);
+#endif
 		return ((char*)pReturn + sizeof(MemoryBlock));
 	}
 
 	//释放内存
-	void freeMemory(void* pMem) {
+	void freeMemory(void* pMem) noexcept {
 		MemoryBlock* pBlock = (MemoryBlock*)((char*)pMem - sizeof(MemoryBlock));
 		if (--pBlock->nRefCount !=0) {
 			return;
@@ -135,6 +154,10 @@ public:
 			pBlock->pNext = _pHeader;
 			_pHeader = pBlock;
 		} else {//malloc出来的free掉
+			// std::lock_guard<std::mutex> lock(_mutex);
+			// static size_t count = 0;
+			// ++count;
+			// COUT("free:%ld\n", count);
 			free(pBlock);
 		}
 	}
@@ -191,11 +214,17 @@ private:
 		static size_t sizeArr[]  = {
 			1, 65, 129, 513, 1025};
 
-		//内存池地址索引
+#if NEWZERO
+		//内存池地址索引 是否允许malloc(0) NO
 		static CMemoryPool* poolAddress[] = {
 		nullptr, &_Memory64, &_Memory128, &_Memory512,
 		&_Memory1024, &_Memory0};
-
+#else
+		//内存池地址索引 是否允许new int[0] YES
+		static CMemoryPool* poolAddress[] = {
+		&_Memory0, &_Memory64, &_Memory128, &_Memory512,
+		&_Memory1024, &_Memory0};
+#endif
 		_poolSizeArr = sizeArr;
 		_poolArr = poolAddress;
 		_arrlength = sizeof(sizeArr)/sizeof(size_t);
@@ -205,6 +234,7 @@ private:
 	///@param size:要申请的内存大小
 	inline CMemoryPool* GetPool(size_t size) const {
 		size_t i;
+		ASSERT_NIL(size, "malloc 0 byte");
 		for (i = 0; i < _arrlength; ++i) {
 			if(size < _poolSizeArr[i]) {
 				break;
@@ -244,12 +274,13 @@ void* operator new[](size_t size) {
 void operator delete[](void* p) noexcept {
 	 CMemoryManager::Instance().freeMem(p);
 }
-#if 0 //可以被内存池接管Malloc和Free函数
+
+#if 1 //可以被内存池接管Malloc和Free函数
 void* Malloc(size_t size) {
 	return CMemoryManager::Instance().allocMem(size);
 }
 
-void Free(void* p) {
+void Free(void* p) noexcept {
 	 CMemoryManager::Instance().freeMem(p);
 }
 #endif

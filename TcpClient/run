@@ -46,7 +46,7 @@ function do_compile()
     ## 4线程编译代码
     make -j4
 
-    ../bin/server
+    ../bin/client
 
     return 0
 }
